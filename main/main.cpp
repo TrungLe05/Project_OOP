@@ -8,7 +8,6 @@
 #include <iostream>
 #include<vector>
 using namespace std;
-
 int main(){
     MENU menu("Main menu");
     Admin ad("admin", "1234");
@@ -59,7 +58,7 @@ int main(){
                                 STAFF newStaff;
                                 newStaff.inputInformation();
                                 staffList.push_back(newStaff);
-                                cout << "New staff added successfully " << endl;
+                                cout << "\033[32m" << "New staff added successfully. " << "\033[0m" << endl; 
                                 break;
                             }
                             case 2: {
@@ -71,12 +70,12 @@ int main(){
                                     if (it->getIdStaff() == idStaff) { 
                                         staffList.erase(it);
                                         deleted = true;
-                                        cout << "Staff deleted " << endl;
+                                        cout << "\033[32m" << "Staff deleted successfully" << "\033[0m" << endl;
                                         break;
                                     }
                                 }
                                 if (!deleted) {
-                                    cout << "The ID entered does not exist.!" << endl;
+                                    cout << "\033[31m"  << "The ID entered does not exist!" << "\033[0m" << endl;
                                 }
                                 break;
                             }
@@ -104,36 +103,71 @@ int main(){
                                             cin.ignore(); 
                                             switch (updateChoice) {
                                                 case 1: {
-                                                    cout << "Enter new name: ";
                                                     string newName;
-                                                    getline(cin, newName);
+                                                    while(true){
+                                                        cout << "Enter new name: ";
+                                                        getline(cin, newName);
+                                                        if (!newName.empty() && all_of(newName.begin(), newName.end(), [](char c) { return isalpha(c) || isspace(c); })) {
+                                                                break;
+                                                            } else {
+                                                                cout <<  "\033[31m" << "Please enter letters only, no special characters or numbers!" <<  "\033[0m" << endl;
+                                                            }
+                                                        }
                                                     updateStaff.setName(newName); 
-                                                    cout << "Name updated successfully!" << endl;
+                                                    cout << "\033[32m" << "Name updated successfully!" << "\033[0m" << endl;
                                                     break;
                                                 }
                                                 case 2: {
-                                                    cout << "Enter new age: ";
                                                     int newAge;
-                                                    cin >> newAge;
-                                                    cin.ignore();
+                                                    while(true){
+                                                        cout << "Enter new age: ";
+                                                        cin >> newAge;
+                                                        if(cin.fail()){
+                                                            cin.clear();
+                                                            cin.ignore(1000, '\n');
+                                                            cout << "\033[31m" << "Invalid age!" <<  "\033[0m" << endl;
+                                                        }
+                                                        else if(newAge <= 0 || newAge >=100){
+                                                            cout <<  "\033[31m" << "Please re-enter new age!" <<  "\033[0m" << endl;
+                                                        }
+                                                        else{
+                                                            break;
+                                                            }
+                                                        }
+                                                    // cin.ignore();
                                                     updateStaff.setAge(newAge); 
-                                                    cout << "Successful age update!" << endl;
+                                                    cout << "\033[32m" << "Successful age update." << "\033[0m" << endl; 
                                                     break;
                                                 }
                                                 case 3: {
-                                                    cout << "Enter new gender: ";
                                                     string newGender;
-                                                    getline(cin, newGender);
+                                                    do {
+                                                        cout << "Enter new gender (Male/Female/Other): ";
+                                                         getline(cin, newGender);
+                                                        if (newGender == "Male" || newGender == "Female" || newGender == "male" || newGender == "female" || newGender == "Other" || newGender == "other") {
+                                                            break;
+                                                        }
+                                                        else {
+                                                            cout <<  "\033[31m" << "Invalid gender! Please re-enter." << "\033[0m" << endl;
+                                                        }
+                                                    } while (true);
                                                     updateStaff.setGender(newGender); 
-                                                    cout << "Gender update successful!" << endl;
+                                                    cout << "\033[32m" << "Gender update successful." << "\033[0m" << endl; 
                                                     break;
                                                 }
                                                 case 4: {
-                                                    cout << "Enter new job position: ";
                                                     string newPosition;
-                                                    getline(cin, newPosition);
+                                                    do{
+                                                        cout << "Enter new job position (Parttime/Fulltime): "; getline(cin, newPosition);
+                                                        if(newPosition == "parttime" || newPosition == "Parttime" || newPosition == "Fulltime" || newPosition == "fulltime"){
+                                                            break;
+                                                        }
+                                                        else{
+                                                            cout << "\033[31m" << "Wrong work postition!" <<  "\033[0m" << endl;
+                                                        }
+                                                    }while(true);
                                                     updateStaff.setPosition(newPosition); 
-                                                    cout << "Job position updated successfully!" << endl;
+                                                    cout << "\033[32m" << "Job position updated successfully." << "\033[0m" << endl; 
                                                     break;
                                                 }
                                                 case 5: {
@@ -141,7 +175,7 @@ int main(){
                                                     string newUserName;
                                                     getline(cin, newUserName);
                                                     updateStaff.setUserName(newUserName); 
-                                                    cout << "Login name updated successfully!" << endl;
+                                                    cout << "\033[32m" << "Login name updated successfully." << "\033[0m" << endl; 
                                                     break;
                                                 }
                                                 case 6: {
@@ -149,14 +183,14 @@ int main(){
                                                     string newPassWord;
                                                     getline(cin, newPassWord);
                                                     updateStaff.setPassWord(newPassWord); 
-                                                    cout << "Password updated successfully!" << endl;
+                                                    cout << "\033[32m" << "Password updated successfully." << "\033[0m" << endl; 
                                                     break;
                                                 }
                                                 case 7:
                                                     cout << "Exit information update." << endl;
                                                     break;
                                                 default:
-                                                    cout << "Invalid selection!" << endl;
+                                                    cout <<  "\033[31m" << "Invalid selection!" << "\033[0m" << endl;
                                                     break;
                                             }
                                         } while (updateChoice != 7);
@@ -166,7 +200,7 @@ int main(){
                                 }
 
                                 if (!found) {
-                                    cout << "The ID entered does not exist.!" << endl;
+                                    cout << "\033[31m" << "The ID entered does not exist.!" << "\033[0m" << endl;
                                 }
                                 break;
                             }
@@ -197,15 +231,45 @@ int main(){
                                 string id;
                                 char size;
                                 double newPrice;
+                                while(true){
                                 cout << "Enter the product ID to update: "; getline(cin, id);
-                                cout << "Enter the product size to update: "; cin >> size;
-                                cout << "Enter the product price to be updated: "; cin >> newPrice;
+                                    if(menu.findItemInMenuListById(id)){
+                                        break;
+                                    }
+                                }
+                                 do{
+                                    cout << "Enter the product size to update (M or L): ";
+                                    cin >> size;
+                                    if(size =='M' || size =='m' || size == 'L' || size == 'l') {
+                                        break;
+                                    }
+                                    else{
+                                        cout << "\033[31m" << "Invalid size! Please enter 'M' or 'L' only." <<  "\033[0m" << endl;
+                                        cin.clear();  
+                                        cin.ignore(1000, '\n');
+                                    }
+
+                                }while(true);
+                                while (true) {
+                                        cout << "Enter the product price to be updated: ";
+                                        if (cin >> newPrice) { 
+                                            if (newPrice > 0) {
+                                                break; 
+                                            } else {
+                                                cout << "\033[31m" << "Invalid price! Please enter a positive number." << "\033[0m" << endl;
+                                            }
+                                        } else {
+                                            cout << "\033[31m" << "Invalid input! Please enter a numeric value." << "\033[0m" << endl;
+                                            cin.clear();               
+                                        }
+                                        cin.ignore(1000, '\n');        
+                                    }
                                 cout << "\nProduct before update" << endl;
                                 if(menu.updatePrice(id,size,newPrice)){
-                                    cout << "\nProduct update successful!" << endl;
+                                    cout << "\033[32m" << "\nProduct update successful." << "\033[0m" << endl; // chữ xanh
                                     menu.findItemInMenuListById(id);
                                 }else{
-                                    cout << "Product update failed!" << endl;
+                                    cout <<  "\033[31m" <<  "Product update failed!" <<  "\033[0m" << endl;
                                 }
                                 break;
                             }
@@ -214,12 +278,12 @@ int main(){
                                 break;
                             }
                             default:
-                                cout << "Invalid selection!" << endl;
+                                cout <<  "\033[31m" << "Invalid selection!" << "\033[0m" << endl;
                                 break;
                         }
                     } while (choiceByAdmin != 9);
                 }else{
-                    cout << "You need to log in first! " << endl;
+                    cout <<  "\033[31m" << "You need to log in first! " << "\033[0m" << endl;
                 }
                 break;
                 }
@@ -240,7 +304,7 @@ int main(){
                     }
                 }
                 if(!check){
-                    cout << "Incorrect username or password!" << endl;
+                    cout <<  "\033[31m" << "Incorrect username or password!" <<  "\033[0m" << endl;
                     break;
                 }
 
@@ -267,11 +331,11 @@ int main(){
                                     staff->calculateSalary();
                                     break;
                                 case 5:{
-                                    cout << "Logout successful! " << endl;
+                                    cout << "\033[32m" << "Logout successful. " << "\033[0m" << endl; // chữ xanh
                                     break;
                                 }
                                 default:
-                                    cout << "Invalid selection!" << endl;
+                                    cout <<  "\033[31m" << "Invalid selection!" << "\033[0m" << endl;
                                     break;
                             }
                     }while(choiceByStaff != 5);
@@ -286,16 +350,12 @@ int main(){
                 break;
             }
             case 4:
-                cout << "End program!" << endl;
+                cout << "\033[31m" << "End program!" << "\033[0m" << endl;
                 break;
             default:
-                cout << "Invalid selection!" << endl;
+                cout <<  "\033[31m" << "Invalid selection!" << "\033[0m" << endl;
                 break;
         }
     } while (choice != 4);
-
     return 0;
 }
-
-
-

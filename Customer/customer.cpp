@@ -8,7 +8,7 @@ void CUSTOMER::orderItems(MENU &menu){
     char sizeOption;
     int quantity;
     cout << "\nPlease select item by product code " << endl;
-    cout << "If you do not order anything else, please select 0 to finish.!" << endl;
+    cout <<  "\033[31m" << "Note: If you do not order anything else, please select 0 to finish.!" <<  "\033[0m"  << endl;
     while(true){
         cout << "Enter product ID: "; cin >> id;
         if(id == "0") break;
@@ -21,7 +21,7 @@ void CUSTOMER::orderItems(MENU &menu){
                 do{
                     cin >> sizeOption;
                     if(sizeOption!='M' || sizeOption!='m' || sizeOption != 'L' || sizeOption != 'l') {
-                        cout << "Invalid size!";
+                        cout << "\033[31m" << "Invalid size!" << "\033[0m";
                         break;
                     }
                 }while(sizeOption!='M' || sizeOption!='m' || sizeOption != 'L' || sizeOption != 'l');
@@ -31,7 +31,7 @@ void CUSTOMER::orderItems(MENU &menu){
                     price = menuItem.getPriceForSizeL(); 
                 }
                 orderList.push_back(make_pair(menuItem, quantity));
-                cout << "Added " << menuItem.getProduct().getNameProduct() << "on order." << endl;
+                cout << "\033[32m" << "Added " << menuItem.getProduct().getNameProduct() << "on order." << "\033[0m" << endl;
                 break;
             }
         }
