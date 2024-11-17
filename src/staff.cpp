@@ -1,6 +1,7 @@
 #include"staff.h"
 
 
+
 STAFF::STAFF(){
     idStaff = " ";
     salary = 0.0;
@@ -26,7 +27,7 @@ void STAFF::inputInformation(){
             break;
         }
         else{
-            cout << "Wrong work postition!" << endl;
+            cout << "\033[31m" << "Wrong work postition!" << "\033[0m"  << endl;
         }
     }while(true);
     cout << "Create a username: "; getline(cin, this->userName);
@@ -38,7 +39,7 @@ void STAFF::inputInformation(){
 bool STAFF::loginByStaff(const string& inputUserName, const string& inputPassWord) {
     if (inputUserName == this->userName && inputPassWord == this->passWord) {
         this->isLoggedIn = true;
-        cout << "Login successful!" << endl;
+        cout << "\033[32m" << "Login successful!" << "\033[0m" << endl;
         return true;
     }
     return false;
@@ -62,7 +63,7 @@ void STAFF::updateInformationStaff(){
             break;
         }
         else{
-            cout << "Wrong work postition!" << endl;
+            cout << "\033[31m" << "Wrong work postition!" << "\033[0m" << endl;
         }
     }while(true);
     cout << "Enter username: "; getline(cin, this->userName);
@@ -72,9 +73,9 @@ void STAFF::updateInformationStaff(){
 void STAFF::logoutByStaff() {
     if (isLoggedIn) {
         isLoggedIn = false;
-        cout << "Logout successful!" << endl;
+        cout << "\033[32m" << "Logout successful!" << "\033[0m" << endl;
     } else {
-        cout << "You are not logged in!" << endl;
+        cout <<  "\033[31m" << "You are not logged in!" << "\033[0m" << endl;
     }
 }
 
@@ -95,8 +96,7 @@ void STAFF::setPassWord(string passWord){
     this->passWord = passWord;
 }
 
-// chức năng checkin checkout tính giờ và tính lương cho nhân viên
-// Định nghĩa hàm checkIn
+
 void STAFF::checkIn(){
     checkInTime = time(0); // Lấy thời gian hiện tại
     cout << "Check-in for " << this->getName() << " at " << ctime(&checkInTime);
