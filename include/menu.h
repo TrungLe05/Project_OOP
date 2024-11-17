@@ -1,6 +1,8 @@
 #ifndef MENU_H
 #define MENU_H
 #include<vector>
+#include <cctype>
+#include <algorithm>
 #include"menuItem.h"
 #include<string>
 #include<iostream>
@@ -24,6 +26,5 @@ class MENU{
         vector<MENUITEM> getMenuList();
         ~MENU();
 };
-
 
 #endif

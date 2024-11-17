@@ -1,6 +1,8 @@
 #include"person.h"
 
 
+
+
 PERSON::PERSON(){
     name = " ";
     age = 0;
@@ -14,10 +16,30 @@ PERSON::PERSON(string name, int age, string gender){
 }
 
 void PERSON::inputInformation() {
+    while(true){
     cout << "Enter full name: ";
     getline(cin, this->name);
+     if (!name.empty() && all_of(name.begin(), name.end(), [](char c) { return isalpha(c) || isspace(c); })) {
+            break;
+        } else {
+            cout << "\033[31m" << "Please enter letters only, no special characters or numbers!" << "\033[0m"  << endl;
+        }
+    }
+    while(true){
     cout << "Enter age: ";
     cin >> this->age;
+    if(cin.fail()){
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout <<  "\033[31m" << "Invalid age!" << "\033[0m" << endl;
+    }
+    else if(age <= 0 || age >=100){
+         cout <<  "\033[31m" << "Please re-enter age!" <<  "\033[0m"  << endl;
+    }
+    else{
+        break;
+        }
+    }
     cin.ignore();
     do {
         cout << "Enter gender (Male/Female/Other): ";
@@ -26,7 +48,7 @@ void PERSON::inputInformation() {
             break;
         }
         else {
-            cout << "Invalid gender! Please re-enter." << endl;
+            cout << "\033[31m" << "Invalid gender! Please re-enter." << "\033[0m" << endl;
         }
     } while (true);
 }
@@ -52,7 +74,7 @@ string PERSON::getGender(){
 }
 
 void PERSON::outputInformation() const {
-    cout << "=========================INFORMATION=========================" << endl;
-    cout << "Name\t\t\t gender\t\t Age\t\t" << endl;
-    cout << name << "\t\t " << gender << "\t\t " << age << endl; 
+    cout << "+===================INFORMATION===================+" << endl;
+    cout << "|Name\t\t\t gender\t\t Age\t  |" << endl;
+    cout <<"|"<< name << "\t\t " << gender << "\t\t " << age << "\t  |" << endl; 
 }

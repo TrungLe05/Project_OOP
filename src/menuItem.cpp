@@ -11,7 +11,7 @@ MENUITEM::MENUITEM(PRODUCT product, double priceForSizeM, double priceForSizeL, 
     this->product = product;
     this->priceForSizeM = priceForSizeM;
     this->priceForSizeL = priceForSizeL;
-    this->isBestSeller = isBestSeller = false;
+    this->isBestSeller = isBestSeller;
 }
 
 double MENUITEM::getPriceForSizeM(){
@@ -41,8 +41,8 @@ void MENUITEM::setPriceForSizeL(double priceForSizeL){
 void MENUITEM::setIsBestSeller(bool isBestSeller){
     this->isBestSeller = isBestSeller;
 }
+
 void MENUITEM::displayMenuItems() const {
-    // Decorative header for the menu item table
     cout << "\n+================== MENU ITEM ==================+\n";
 
     product.displayProduct(); 
@@ -52,16 +52,20 @@ void MENUITEM::displayMenuItems() const {
     cout << "+-----------------------------------------------+\n";
     cout << "|     M        | " << setw(10) << fixed << setprecision(0) << priceForSizeM << " d                   |\n";
     cout << "|     L        | " << setw(10) << fixed << setprecision(0) << priceForSizeL << " d                   |\n";
-
+    
     if (isBestSeller) {
-        cout << "|              BESTSELLER ITEM               |\n";
         cout << "+-----------------------------------------------+\n";
+        cout << "|                                   |\033[34mBEST SELLER\033[0m|\n";
     }
 
     cout << "+===============================================+\n\n";
 }
 
+
 bool MENUITEM::getSizeMorSizeL()const{
     return this->MorL;
 }
+
+
+
 MENUITEM::~ MENUITEM(){}

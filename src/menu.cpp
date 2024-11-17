@@ -1,6 +1,5 @@
 #include"menu.h"
 
-
 MENU::MENU(){
 }
 // khởi tạo một menu có sẵn
@@ -40,14 +39,48 @@ void MENU::additemInMenuListFromInput(){
     double priceForSizeM, priceForSizeL;
     bool status, isBestSeller;
     cout << "Enter product ID: "; getline(cin, id);
+    while(true){
     cout << "Enter product name: "; getline(cin , name);
-    cout << "Enter product price for size M: "; cin >> priceForSizeM;
-    cout << "Enter product price for size L: "; cin >> priceForSizeL;
-    cout << "Enter product status (1: in stock/ 0: out of stock): "; cin >> status;
+     if (!name.empty() && all_of(name.begin(), name.end(), [](char c) { return isalpha(c) || isspace(c); })) {
+            break;
+        } else {
+            cout << "\033[31m" << "Please enter letters only, no special characters or numbers!" << "\033[0m" << endl;
+        }
+    }
+    // kiểm tra giá tiền nhập vào có hợp lệ không (Giá tiền không được là số âm)
+    while (true) {
+        cout << "Enter product price for size M: ";
+        if (cin >> priceForSizeM ) { 
+        if (priceForSizeM > 0) {
+        break; 
+        } else {
+        cout << "\033[31m" << "Invalid price! Please enter a positive number." << "\033[0m" << endl;
+        }
+        } else {
+        cout << "\033[31m" << "Invalid input! Please enter a numeric value." << "\033[0m" << endl;
+        cin.clear();               
+        }
+        cin.ignore(1000, '\n');        
+        }
+         while (true) {
+        cout << "Enter product price for size L: ";
+        if (cin >> priceForSizeL ) { 
+        if (priceForSizeL > 0) {
+        break; 
+        } else {
+        cout << "\033[31m" << "Invalid price! Please enter a positive number." << "\033[0m" << endl;
+        }
+        } else {
+        cout << "\033[31m" << "Invalid input! Please enter a numeric value." << "\033[0m" << endl;
+        cin.clear();               
+        }
+        cin.ignore(1000, '\n');        
+        }
+        isBestSeller = status = 1;
     PRODUCT product(id, name, status);
     MENUITEM newItem (product, priceForSizeM, priceForSizeL, isBestSeller);
     menuList.push_back(newItem);
-    cout << "Product added successfully!" << endl;
+    cout << "\033[32m" << "Product added successfully!" <<"\033[0m" << endl;
 }
 
 MENUITEM* MENU::findItemInMenuListById(string id){
@@ -57,11 +90,11 @@ MENUITEM* MENU::findItemInMenuListById(string id){
             return &item;
         }
     }
-    cout << " The product you are looking for does not exist!" << endl;
+    cout <<  "\033[31m" << "The product you are looking for does not exist!" <<  "\033[0m" << endl;
     return nullptr;
 }
-void MENU::displayMenu()const{
-    for (const MENUITEM& displayItem : menuList){
+void MENU::displayMenu()const{    
+    for (const MENUITEM& displayItem : menuList) {
         displayItem.displayMenuItems();
     }
 }
@@ -89,6 +122,8 @@ vector<MENUITEM> MENU::getBestSellerItems(){
     }
     return bestSeller;
 }
+
+
 
 vector<MENUITEM> MENU::getMenuList(){
     return menuList;
