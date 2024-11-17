@@ -10,12 +10,13 @@
 #include<iostream>
 using namespace std;
 
-class CUSTOMER : public PERSON {
+class CUSTOMER : public PERSON{
     private:
     vector<pair<MENUITEM, int>> orderList; // danh sách đơn đặt hàng của customer
     public:
         CUSTOMER();
         void orderItems(MENU &menu); // thêm đơn hàng
         void checkout(int &id,const string &paymentMethod); // thanh toán
+        int generateTransactionID();
 };
 #endif

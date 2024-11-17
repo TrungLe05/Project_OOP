@@ -47,9 +47,10 @@ bool STAFF::loginByStaff(const string& inputUserName, const string& inputPassWor
 
 void STAFF::outputInformation()const {
         PERSON::outputInformation();
-        cout << endl;
-        cout << "ID\t\t\t Position" << endl;
-        cout << this->idStaff << "\t\t " << this->position << endl;
+        cout << "+-------------------------------------------------+" << endl;
+        cout << "|ID\t\t\t Position\t\t  |" << endl;
+        cout <<"|"<< this->idStaff << "\t\t " << this->position << "\t\t  |" << endl;
+        cout << "+=================================================+" << endl;
 }
 
 void STAFF::updateInformationStaff(){
