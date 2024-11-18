@@ -21,19 +21,33 @@ int main(){
         STAFF("CQ.64.CNTT3", "Bui Dai Nghia", 19, "Nam", "Parttime", "user3", "0123"),
     };
     //hiển thị menu khi mới vào chương trình
-    cout << "===========================MENU===========================" << endl;
-    menu.displayMenu();
     int choice;
     do {
-        cout << "\n1 .Manager " << endl;
-        cout << "2. Staff" << endl;
-        cout << "3. Order " << endl;
-        cout << "4. Exit" << endl;
-        cout << "Enter selection: ";
-        cin >> choice;
+        cout << "+======USER OPTIONS======+" << endl;
+        cout << "|\t1. Manager\t |" << endl;
+        cout << "+------------------------+" << endl;
+        cout << "|\t2. Staff\t |" << endl;
+        cout << "+------------------------+" << endl;
+        cout << "|\t3. Order\t |" << endl;
+        cout << "+------------------------+" << endl;
+        cout << "|\t4. Exit \t |" << endl;
+        cout << "+========================+" << endl;
+        while(true){
+            cout << "Enter selection: ";
+            cin >> choice;
+            if(cin.fail()){
+                cin.clear();
+                cin.ignore(1000, '\n');
+                cout << "\033[31mInvalid selection! \033[0m" << endl;
+            }
+            else{
+                break;
+            }
+        }
         cin.ignore(); 
         switch (choice) {
             case 1:{
+                system("cls");
                 if (!ad.isAdminLoggedIn()) {
                     bool loginSuccess = ad.loginbByAdmin();
                     if(!loginSuccess){
@@ -41,22 +55,39 @@ int main(){
                     }
                     int choiceByAdmin;
                     do {
-                        cout << "===========EDIT STAFF==========" << endl;
-                        cout << "1. Add staff " << endl;
-                        cout << "2. Delete staff " << endl;
-                        cout << "3. Edit staff information " << endl;
-                        cout << "4. Show staff list " << endl;
-                        cout << "===========EDIT MENU===========" << endl;
-                        cout << "5. Add products to menu " << endl;
-                        cout << "6. Show full menu " << endl;
-                        cout << "7. Find products by ID " << endl;
-                        cout << "8. Update product price " << endl;
-                        cout << "9. Log out " << endl;
-                        cout << "Enter selection: ";
-                        cin >> choiceByAdmin;
+                        cout << "\n\n+===============================+" << endl;
+                        cout << "|                               |" << endl;
+                        cout << "+===========EDIT STAFF==========+" << endl;
+                        cout << "|1. Add staff\t\t\t|" << endl;
+                        cout << "|2. Delete staff \t\t|" << endl;
+                        cout << "|3. Edit staff information \t|" << endl;
+                        cout << "|4. Show staff list \t\t|" << endl;
+                        cout << "+===============================+\n";
+                        cout << "|                               |" << endl;
+                        cout << "+===========EDIT MENU===========+" << endl;
+                        cout << "|5. Add products to menu \t|" << endl;
+                        cout << "|6. Show full menu \t\t|" << endl;
+                        cout << "|7. Find products by ID \t|" << endl;
+                        cout << "|8. Update product price \t|" << endl;
+                        cout << "+===============================+\n";
+                        cout << "|9. Log out\t\t\t|" << endl;
+                        cout << "+===============================+" << endl;
+                        while(true){
+                            cout << "Enter selection: ";
+                            cin >> choiceByAdmin;
+                            if(cin.fail()){
+                                cin.clear();
+                                cin.ignore(1000, '\n');
+                                cout << "\033[31mInvalid selection! \033[0m" << endl;
+                            }
+                            else{
+                                break;
+                            }
+                        }
                         cin.ignore(); 
                         switch (choiceByAdmin) {
                             case 1: {
+                                system("cls");
                                 cout << "Enter information for new staff " << endl;
                                 STAFF newStaff;
                                 newStaff.inputInformation();
@@ -65,6 +96,7 @@ int main(){
                                 break;
                             }
                             case 2: {
+                                system("cls");
                                 cout << "Enter the staff ID to delete: ";
                                 string idStaff;
                                 getline(cin, idStaff);
@@ -83,6 +115,7 @@ int main(){
                                 break;
                             }
                             case 3: {
+                                system("cls");
                                  cout << "Enter the staff ID whose information needs to be edited: ";
                                 string IDStaff;
                                 getline(cin, IDStaff);
@@ -93,19 +126,36 @@ int main(){
                                         found = true;
                                         int updateChoice;
                                         do {
-                                            cout << "\nSelect the information to update:" << endl;
-                                            cout << "1. Update name" << endl;
-                                            cout << "2. Update age" << endl;
-                                            cout << "3. Update gender" << endl;
-                                            cout << "4. Update job position" << endl;
-                                            cout << "5. Update login name" << endl;
-                                            cout << "6. Update Password" << endl;
-                                            cout << "7. Exit update" << endl;
-                                            cout << "Enter selection: ";
-                                            cin >> updateChoice;
+                                            cout << "\n\n+=========UPDATE OPTION=========+" << endl;
+                                            cout << "|1. Update name\t\t\t|" << endl;
+                                            cout << "+-------------------------------+" << endl;
+                                            cout << "|2. Update age\t\t\t|" << endl;
+                                            cout << "+-------------------------------+" << endl;
+                                            cout << "|3. Update gender\t\t|" << endl;
+                                            cout << "+-------------------------------+" << endl;
+                                            cout << "|4. Update job position\t\t|" << endl;
+                                            cout << "+-------------------------------+" << endl;
+                                            cout << "|5. Update login name\t\t|" << endl;
+                                            cout << "+-------------------------------+" << endl;
+                                            cout << "|6. Update Password\t\t|" << endl;
+                                            cout << "+-------------------------------+" << endl;
+                                            cout << "|7. Exit update\t\t\t|" << endl;
+                                            cout << "+===============================+\n\n";
+                                            while(true){
+                                                cout << "Enter selection: ";
+                                                cin >> updateChoice;
+                                                if(cin.fail()){
+                                                    cin.clear();
+                                                    cin.ignore(1000, '\n');
+                                                    cout << "\033[31m Invalid selection!\033[0m" << endl;
+                                                }else{
+                                                    break;
+                                                }
+                                            }
                                             cin.ignore(); 
                                             switch (updateChoice) {
                                                 case 1: {
+                                                    system("cls");
                                                     string newName;
                                                     while(true){
                                                         cout << "Enter new name: ";
@@ -121,6 +171,7 @@ int main(){
                                                     break;
                                                 }
                                                 case 2: {
+                                                    system("cls");
                                                     int newAge;
                                                     while(true){
                                                         cout << "Enter new age: ";
@@ -143,6 +194,7 @@ int main(){
                                                     break;
                                                 }
                                                 case 3: {
+                                                    system("cls");
                                                     string newGender;
                                                     do {
                                                         cout << "Enter new gender (Male/Female/Other): ";
@@ -159,6 +211,7 @@ int main(){
                                                     break;
                                                 }
                                                 case 4: {
+                                                    system("cls");
                                                     string newPosition;
                                                     do{
                                                         cout << "Enter new job position (Parttime/Fulltime): "; getline(cin, newPosition);
@@ -174,6 +227,7 @@ int main(){
                                                     break;
                                                 }
                                                 case 5: {
+                                                    system("cls");
                                                     cout << "Enter new login name: ";
                                                     string newUserName;
                                                     getline(cin, newUserName);
@@ -182,6 +236,7 @@ int main(){
                                                     break;
                                                 }
                                                 case 6: {
+                                                    system("cls");
                                                     cout << "Enter new password: ";
                                                     string newPassWord;
                                                     getline(cin, newPassWord);
@@ -190,6 +245,7 @@ int main(){
                                                     break;
                                                 }
                                                 case 7:
+                                                    system("cls");
                                                     cout << "Exit information update." << endl;
                                                     break;
                                                 default:
@@ -208,28 +264,33 @@ int main(){
                                 break;
                             }
                             case 4: {
+                                system("cls");
                                 for (const STAFF &temp : staffList) {
                                     temp.outputInformation();
                                 }
                                 break;
                             }
                             case 5:
+                                system("cls");
                                 // Them san pham vao menu
                                 menu.additemInMenuListFromInput();
                                 break;
                             case 6:
+                                system("cls");
                                 cout << "===========================MENU===========================" << endl;
                                 menu.displayMenu();
                                 break;
                             case 7:{
+                                system("cls");
                                 // Tìm sản phẩm bằng id
                                 string id;
-                                cout << "Enter the product ID you want to find " << endl;
+                                cout << "Enter the product ID you want to find: ";
                                 cin >> id;
                                 menu.findItemInMenuListById(id);
                                 break;
                             }
                             case 8:{
+                                system("cls");
                                 // Cập nhật giá sản phẩm
                                 string id;
                                 char size;
@@ -277,6 +338,7 @@ int main(){
                                 break;
                             }
                             case 9:{
+                                system("cls");
                                 ad.logoutByAdmin();
                                 break;
                             }
@@ -291,6 +353,7 @@ int main(){
                 break;
                 }
             case 2: {
+                system("cls");
                 string inputUserName, inputPassWord;
                 cout << "Enter username: ";
                 cin >> inputUserName;
@@ -313,28 +376,48 @@ int main(){
 
                     int choiceByStaff;
                     do{
-                        cout << "1. Checkin hour " << endl; 
-                        cout << "2. Checkout hour  " << endl;
-                        cout << "3. View hours worked " << endl;
-                        cout << "4. View current salary " << endl;
-                        cout << "5. Log out " << endl;
-                        cout << "Enter selection: ";
-                        cin >> choiceByStaff;
+                        cout << "\n\n+======== STAFF ========+" << endl;
+                        cout << "|1. Checkin hour  \t|" << endl; 
+                        cout << "+-----------------------+" << endl;
+                        cout << "|2. Checkout hour  \t| " << endl;
+                        cout << "+-----------------------+" << endl;
+                        cout << "|3. View hours worked \t| " << endl;
+                        cout << "+-----------------------+" << endl;
+                        cout << "|4. View current salary\t| " << endl;
+                        cout << "+-----------------------+" << endl;
+                        cout << "|5. Log out \t\t|" << endl;
+                        cout << "+-----------------------+" << endl;
+                        while(true){
+                            cout << "Enter selection: ";
+                            cin >> choiceByStaff;
+                            if(cin.fail()){
+                                cin.clear();
+                                cin.ignore(1000, '\n');
+                                cout << "\033[31m Invalid selection! \033[0m" << endl;
+                            }else{
+                                break;
+                            }
+                        }
                         switch(choiceByStaff){
                                 case 1:
+                                    system("cls");
                                     staff->checkIn();
                                     break;
                                 case 2:
+                                    system("cls");
                                     staff->checkOut();
                                     break;
                                 case 3:
+                                    system("cls");
                                     staff->displayTotalHours();
                                     break;
                                 case 4:
+                                    system("cls");
                                     staff->calculateSalary();
                                     break;
                                 case 5:{
-                                    cout << "\033[32m" << "Logout successful. " << "\033[0m" << endl; // chữ xanh
+                                    system("cls");
+                                    cout << "\033[32m" << "Logout successful. " << "\033[0m" << endl; 
                                     break;
                                 }
                                 default:
@@ -345,10 +428,12 @@ int main(){
                 break;
             }
             case 3:{
+                system("cls");
+                cout << "=======================MENU======================" << endl;
+                menu.displayMenu();
                 CUSTOMER customer;
                 customer.orderItems(menu);
-                int transactionCode;
-                cout << "Enter transaction ID: "; cin >> transactionCode;
+                int transactionCode = customer.generateTransactionID();
                 customer.checkout(transactionCode,"Cash");
                 break;
             }
