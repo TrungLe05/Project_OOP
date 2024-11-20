@@ -15,20 +15,27 @@ bool Admin::loginbByAdmin(){
     getline(cin, inputPass);
     if (inputUser == this->userName && inputPass == this->passWord) {
         this->isLoggedIn = true;
-        cout << "Login successful!" << endl;
+        cout << "\033[32m" << "Login successful!" << "\033[0m" << endl;
         return true;
-        } else {
-        cout << "Incorrect username or password!" << endl;
+        } 
+        else if(inputUser == this->userName && inputPass != this->passWord) {
+            cout << "\033[31m" << "wrong password!" << "\033[0m" << endl;
+        }
+        else if(inputUser != this->userName && inputPass == this->passWord){
+            cout << "\033[31m" << "wrong username!" << "\033[0m" << endl;
+        }
+        else if(inputUser != this->userName && inputPass != this->passWord){
+            cout << "\033[31m" << "Incorrect password and username!" <<  "\033[0m" << endl;
+        }
         return false;
-    }
 }
 
 void Admin::logoutByAdmin(){
     if (this->isLoggedIn) {
         this->isLoggedIn = false;
-        cout << "Logout successful!" << endl;
+        cout << "\033[32m" << "Logout successful!" << "\033[0m" << endl;
     } else {
-        cout << "You are not logged in!" << endl;
+        cout << "\033[31m" << "You are not logged in!" << "\033[0m"  << endl;
     }
 }
 
