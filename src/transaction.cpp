@@ -32,7 +32,6 @@ void TRANSACTION::calculateOrder() {
     for (const auto &item : items) {
         totalAmount += item.first * item.second;
     }
-    
 }
 
 // phương thức chuyển đổi tồng tiền từ số sang chữ
@@ -116,9 +115,10 @@ string TRANSACTION::convertToWords(long long amount) {
 
     return result;
 }
+
 // phương thức hiển thị chi tiết giao dịch cho khách hàng
 void TRANSACTION::displayTransactionDetails() {
-    cout << "Transaction ID: " << idTransaction << endl;
+cout << "Transaction ID: " << idTransaction << endl;
     cout << "Payment method: " << paymentMethod << endl;
     cout << "Payment date: " << dateTransaction.day << "/" 
          << dateTransaction.month << "/" << dateTransaction.year << endl;
