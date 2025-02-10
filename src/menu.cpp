@@ -93,11 +93,22 @@ MENUITEM* MENU::findItemInMenuListById(string id){
     cout <<  "\033[31m" << "The product you are looking for does not exist!" <<  "\033[0m" << endl;
     return nullptr;
 }
-void MENU::displayMenu()const{    
-    for (const MENUITEM& displayItem : menuList) {
-        displayItem.displayMenuItems();
+void MENU::displayMenu()const{   
+ int count = 0;
+for (const MENUITEM& displayItem : menuList) {
+    displayItem.displayMenuItems();
+    count++;
+
+    if (count % 10 == 0) {
+        std::cout << "\t";  // Chuyển sang cột ngang sau mỗi 10 mục
+    } else {
+        std::cout << " ";   // Thêm khoảng trắng giữa các mục
     }
 }
+
+}
+
+
 bool MENU::updatePrice(string id, char size, double newPrice){
     MENUITEM* item = findItemInMenuListById(id);
     if(item != nullptr){

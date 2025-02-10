@@ -10,17 +10,24 @@ using namespace std;
 class PERSON{
     private:
         string name;
-        int age;
+        int day;
+        int month;
+        int year;
         string gender;
     public:
         PERSON();
-        PERSON(string name, int age, string gender);
+        PERSON(string name, int age, int month, int year, string gender);
+        PERSON(int day, int month,int year,string gender);
         void inputInformation();
         void setName(string name);
-        void setAge(int age);
+        void setDay(int day);
+        void setMonth(int month);
+        void setYear(int year);
         void setGender(string gender);
-        string getName();
-        int getAge();
+        string getName()const;
+        int getDay();
+        int getMonth();
+        int getYear();
         string getGender();
         virtual void outputInformation() const;
 

@@ -4,6 +4,8 @@
 #include"person.h"
 #include<iostream>
 #include<ctime>
+#include<sstream>
+
 using namespace std;
 
 class STAFF : public PERSON{
@@ -19,9 +21,9 @@ class STAFF : public PERSON{
         bool isLoggedIn;
     public:
         STAFF();
-        STAFF(string idStaff, string name, int age, string gender, string position, string userName, string passWord);
+        STAFF(string idStaff, string name, int day, int month, int year, string gender, string position, string userName, string passWord);
         void inputInformation(); // phương thức nhập thông tin nhân viên khi được admin chọn vào mục thêm nhân viên
-        void outputInformation() const;
+        void outputInformation()const;
         void updateInformationStaff();
         void checkIn(); // hàm để nhân viên check-in giờ đi làm ( chấm công )
         void checkOut();   // hàm để nhân viên check-out 
@@ -33,11 +35,16 @@ class STAFF : public PERSON{
         void logoutByStaff();
         bool isStaffLoggedIn();
         string getPassWord();
-        string getIdStaff();
+        string getIdStaff()const;
         void setIdStaff(string idStaff);
         void setPosition(string position);
         void setUserName(string userName);
         void setPassWord(string passWord);
+        string toString(PERSON &a) const {
+        ostringstream oss;
+        oss << idStaff << a.getDay() << a.getMonth() << a.getYear() << a.getName() << a.getGender() << position << userName << passWord;
+        return oss.str();
+        }
         virtual ~STAFF();
 };
 

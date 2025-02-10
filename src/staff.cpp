@@ -10,17 +10,25 @@ STAFF::STAFF(){
     userName = " ";
 }
 
-STAFF::STAFF(string idStaff, string name, int age, string gender, string position, string userName, string passWord) : PERSON(name, age, gender){
+STAFF::STAFF(string idStaff,string name, int day, int month, int year, string gender, string position, string userName, string passWord):PERSON(name, day, month, year, gender){
     this->idStaff = idStaff;
     this->position = position;
     this->userName = userName;
     this->passWord = passWord;
 }
 
+int random(int a, int b){
+    int random_number = a + rand() % (b - a + 1);
+    return random_number;
+}
+
 void STAFF::inputInformation(){
     PERSON::inputInformation();
-    cout << "create staff ID : "; cin >> this->idStaff;
-    cin.ignore();
+    int idStaffNumber = random(1,100);
+    idStaff = "CQ.64.CNTT";
+    string idStaff2 = to_string(idStaffNumber);
+    idStaff += idStaff2;
+    cout << "Staff ID: " <<  idStaff << endl;
     do{
         cout << "Enter work position (Parttime/Fulltime): "; getline(cin, this->position);
         if(this->position == "parttime" || this->position == "Parttime" || this->position == "Fulltime" || this->position == "fulltime"){
@@ -30,8 +38,20 @@ void STAFF::inputInformation(){
             cout << "\033[31m" << "Wrong work postition!" << "\033[0m"  << endl;
         }
     }while(true);
-    cout << "Create a username: "; getline(cin, this->userName);
-    cout << "Create Password: "; getline(cin, this->passWord);
+    // cout << "Create a username: "; getline(cin, this->userName);
+    userName = idStaff;
+    while(true){
+        cout << "Create Password: "; getline(cin, this->passWord);
+        if(passWord.length() > 8){
+            cout << "\033[31mThe password must have a maximum of 8 characters.\033[0m" << endl;
+        }
+        else if (passWord.length() < 4){
+            cout << "\033[31mThe password must have a minimum of 4 characters.\033[0m" << endl;
+        }
+        else{
+            break;
+        }
+    }
 }
 
 
@@ -45,13 +65,16 @@ bool STAFF::loginByStaff(const string& inputUserName, const string& inputPassWor
     return false;
 }
 
+
 void STAFF::outputInformation()const {
         PERSON::outputInformation();
-        cout << "+-------------------------------------------------+" << endl;
-        cout << "|ID\t\t\t Position\t\t  |" << endl;
-        cout <<"|"<< this->idStaff << "\t\t " << this->position << "\t\t  |" << endl;
-        cout << "+=================================================+" << endl;
+        cout << "+---------------------------------------------------------+" << endl;
+        cout << "|ID\t\t\t Position\t\t\t  |" << endl;
+        cout <<"|"<< this->idStaff << "\t\t " << this->position << "\t\t\t  |" << endl;
+        cout << "+=========================================================+" << endl;
 }
+
+
 
 void STAFF::updateInformationStaff(){
     cout << "Update staff information" << endl;
@@ -82,7 +105,7 @@ void STAFF::logoutByStaff() {
 
 string STAFF::getPassWord(){return passWord;}
 
-string STAFF::getIdStaff(){return idStaff;}
+string STAFF::getIdStaff()const{return idStaff;}
 
 void STAFF::setIdStaff(string idStaff){
     this->idStaff = idStaff;
@@ -137,10 +160,4 @@ void STAFF::calculateSalary() {
     // In ra thông tin lương
     cout << "Total hours worked by " << this->getName() << ": " << totalHoursWorked << " hours" << endl;
     cout << "Salary for " << totalHoursWorked << " hours worked: " << salary << " VND" << endl;
-}
-
-
-
-STAFF::~STAFF(){
-
 }

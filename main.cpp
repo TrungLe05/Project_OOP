@@ -5,35 +5,110 @@
 #include "product.h"
 #include "staff.h"
 #include "transaction.h"
+#include "WorkSchedule.h"
 #include <iostream>
+#include<cctype>
+#include <fstream>
 // #include <limits>
 // #include <cctype>
 // #include <algorithm>
 #include<vector>
 using namespace std;
+void logChange(const std::string& change) {
+    std::ofstream logFile("change_log.txt", std::ios_base::app);
+    logFile << change << std::endl;
+}
+
+// Function to encrypt passwords (simple example, replace with a proper encryption method)
+std::string encryptPassword(const std::string& password) {
+    std::string encrypted = password;
+    std::transform(encrypted.begin(), encrypted.end(), encrypted.begin(), [](char c) { return c + 1; });
+    return encrypted;
+}
+
+
+std::string centerTextInFrame(const std::string& text, int frameWidth) {
+    int padding = (frameWidth - 2 - text.length()) / 2; // Trừ 2 ký tự '|' hai bên
+    if (padding > 0) {
+        return "|" + std::string(padding, ' ') + text + std::string(padding, ' ') + "|";
+    }
+    return "|" + text + "|";
+}
+
+// Hàm để căn giữa toàn bộ khung trên màn hình
+void printCenteredFrame(const std::vector<std::string>& lines, int consoleWidth, int frameWidth) {
+    int leftPadding = (consoleWidth - frameWidth) / 2;
+
+    for (size_t i = 0; i < lines.size(); ++i) {
+        std::string line;
+        if (lines[i][0] == '|') {
+            line = centerTextInFrame(lines[i].substr(1, lines[i].length() - 2), frameWidth);
+        } else {
+            line = lines[i];
+        }
+        
+        if (i == lines.size() - 1) {
+            // In dòng cuối "Enter selection: " mà không xuống dòng
+            std::cout << std::string(leftPadding, ' ') << line;
+        } else {
+            std::cout << std::string(leftPadding, ' ') << line << std::endl;
+        }
+    }
+}
+
+vector<std::string> convertStaffVectorToString(const std::vector<STAFF>& staffList, PERSON &a) {
+    std::vector<std::string> stringList;
+    for (const auto& staff : staffList) {
+        stringList.push_back(staff.toString(a));
+    }
+    return stringList;
+}
+
 int main(){
+    srand(std::time(0));
+    int consoleWidth = 180;  
     MENU menu("Main menu");
     Admin ad("admin", "1234");
     //khởi tạo danh sách nhân viên 
     vector<STAFF> staffList = {
-        STAFF("CQ.64.CNTT1", "Le Quoc Trung", 19, "Nam", "Parttime", "user1", "1234"),
-        STAFF("CQ.64.CNTT2", "Anh Nguyen", 19, "Nam", "Parttime", "user2", "5678"),
-        STAFF("CQ.64.CNTT3", "Bui Dai Nghia", 19, "Nam", "Parttime", "user3", "0123"),
+        STAFF("CQ.64.CNTT1", "Le Quoc Trung", 05, 05, 2005, "Nam", "Parttime", "user1", "1234"),
+        STAFF("CQ.64.CNTT2", "Anh Nguyen", 06, 04, 2005, "Nam", "Parttime", "user2", "5678"),
+        STAFF("CQ.64.CNTT3", "Bui Dai Nghia", 07, 03, 2005, "Nam", "Parttime", "user3", "0123"),
     };
-    //hiển thị menu khi mới vào chương trình
+    WorkSchedule::Shift s1 = {"Le Quoc Trung  ","Monday", "Morning", true};
+    WorkSchedule employeeSchedule(s1);
+    employeeSchedule.addSchedule("Le Quoc Trung  " ,"Tuesday", "Evening", true);
+    employeeSchedule.addSchedule("Le Quoc Trung  ", "Wednesday", "Morning", false);
+    employeeSchedule.addSchedule("Le Quoc Trung    " ,"Thursday", "Afternoon", true);
+    employeeSchedule.addSchedule("Nguyen Anh Nguyen" ,"Friday", "Morning", true);
+    employeeSchedule.addSchedule("Nguyen Anh Nguyen" ,"Saturday", "Day Off", false);
+    employeeSchedule.addSchedule( "Le Quoc Trung","Sunday", "Night", true);
+
+    // employeeSchedule.displaySchedule();
+    // vector<std::string> stringList = convertStaffVectorToString(staffList);
     int choice;
     do {
-        cout << "+======USER OPTIONS======+" << endl;
-        cout << "|\t1. Manager\t |" << endl;
-        cout << "+------------------------+" << endl;
-        cout << "|\t2. Staff\t |" << endl;
-        cout << "+------------------------+" << endl;
-        cout << "|\t3. Order\t |" << endl;
-        cout << "+------------------------+" << endl;
-        cout << "|\t4. Exit \t |" << endl;
-        cout << "+========================+" << endl;
+        // cout << "+======USER OPTIONS======+" << endl;
+        // cout << "|\t1. Manager\t |" << endl;
+        // cout << "+------------------------+" << endl;
+        // cout << "|\t2. Staff\t |" << endl;
+        // cout << "+------------------------+" << endl;
+        // cout << "|\t3. Order\t |" << endl;
+        // cout << "+------------------------+" << endl;
+        // cout << "|\t4. Exit \t |" << endl;
+        // cout << "+========================+" << endl;
+        vector<string> userOptions = {
+            "+======USER OPTIONS======+",
+            "|1. Manager              |" ,
+            "|2. Staff                |" ,
+            "|3. Order                |",
+            "|4. Exit                 |",
+            "+========================+",
+            "Enter selection: ",
+        };
+        int frameWidthUserOptions = 20;
+        printCenteredFrame(userOptions, consoleWidth, frameWidthUserOptions);
         while(true){
-            cout << "Enter selection: ";
             cin >> choice;
             if(cin.fail()){
                 cin.clear();
@@ -47,7 +122,7 @@ int main(){
         cin.ignore(); 
         switch (choice) {
             case 1:{
-                system("cls");
+                // system("cls");
                 if (!ad.isAdminLoggedIn()) {
                     bool loginSuccess = ad.loginbByAdmin();
                     if(!loginSuccess){
@@ -55,25 +130,32 @@ int main(){
                     }
                     int choiceByAdmin;
                     do {
-                        cout << "\n\n+===============================+" << endl;
-                        cout << "|                               |" << endl;
-                        cout << "+===========EDIT STAFF==========+" << endl;
-                        cout << "|1. Add staff\t\t\t|" << endl;
-                        cout << "|2. Delete staff \t\t|" << endl;
-                        cout << "|3. Edit staff information \t|" << endl;
-                        cout << "|4. Show staff list \t\t|" << endl;
-                        cout << "+===============================+\n";
-                        cout << "|                               |" << endl;
-                        cout << "+===========EDIT MENU===========+" << endl;
-                        cout << "|5. Add products to menu \t|" << endl;
-                        cout << "|6. Show full menu \t\t|" << endl;
-                        cout << "|7. Find products by ID \t|" << endl;
-                        cout << "|8. Update product price \t|" << endl;
-                        cout << "+===============================+\n";
-                        cout << "|9. Log out\t\t\t|" << endl;
-                        cout << "+===============================+" << endl;
+                          // Giả sử chiều rộng console là 80 ký tự
+                        vector<string> Choice = {
+                            "+===============EDIT STAFF================+",
+                            "|                                         |",
+                            "| 1. Add staff                            |",
+                            "| 2. Delete staff                         |",
+                            "| 3. Edit staff information               |",
+                            "| 4. Show staff list                      |",
+                            "|                                         |",
+                            "+===============EDIT MENU=================+",
+                            "|                                         |",
+                            "| 5. Add products to menu                 |",
+                            "| 6. Show full menu                       |",
+                            "| 7. Find products by ID                  |",
+                            "| 8. Update product price                 |",
+                            "|                                         |",
+                            "+=========================================+",
+                            "| 9. Log out                              |",
+                            "+=========================================+",
+                            "Enter selection: "
+                        };
+                        int frameWidthChoice = 40;
+                        // printCentered(Choice, consoleWidth);
                         while(true){
-                            cout << "Enter selection: ";
+                            // cout << "Enter selection: ";
+                            printCenteredFrame(Choice, consoleWidth, frameWidthChoice);
                             cin >> choiceByAdmin;
                             if(cin.fail()){
                                 cin.clear();
@@ -97,25 +179,64 @@ int main(){
                             }
                             case 2: {
                                 system("cls");
+                                cout << "+============Employee ID List===========+"<< endl;
+                                int count = 0;
+                                for(STAFF &staff : staffList){
+                                    count++;
+                                    cout << "|\t\t"<< staff.getIdStaff() << "\t\t|" << endl;
+                                    if(staffList.size()!=static_cast<size_t>(count)){
+                                        cout << "+---------------------------------------+" << endl;
+                                    }
+                                    
+                                }
+                                cout << "+=======================================+"<< endl;
                                 cout << "Enter the staff ID to delete: ";
                                 string idStaff;
                                 getline(cin, idStaff);
+
                                 bool deleted = false;
-                                for (auto it = staffList.begin(); it != staffList.end(); it++) {
-                                    if (it->getIdStaff() == idStaff) { 
-                                        staffList.erase(it);
+
+                                for (auto it = staffList.begin(); it != staffList.end(); ++it) {
+                                    if (it->getIdStaff() == idStaff) {
+                                        // Hiển thị thông tin nhân viên
+                                        it->outputInformation();
                                         deleted = true;
-                                        cout << "\033[32m" << "Staff deleted successfully" << "\033[0m" << endl;
-                                        break;
+
+                                        // Xác nhận xóa
+                                        char c;
+                                        cout << "Are you sure you want to delete that staff (Y/N)? ";
+                                        cin >> c;
+                                        cin.ignore(1000, '\n'); // Xóa bộ đệm
+
+                                        if (c == 'y' || c == 'Y') {
+                                            staffList.erase(it);
+                                            cout << "\033[32mStaff deleted successfully.\033[0m" << endl;
+                                        } else {
+                                            cout << "\033[33mDeletion cancelled.\033[0m" << endl;
+                                        }
+
+                                        break; // Ngắt vòng lặp sau khi xử lý
                                     }
                                 }
+
                                 if (!deleted) {
-                                    cout << "\033[31m"  << "The ID entered does not exist!" << "\033[0m" << endl;
+                                    cout << "\033[31mThe ID entered does not exist!\033[0m" << endl;
                                 }
                                 break;
                             }
                             case 3: {
                                 system("cls");
+                                cout << "+============Employee ID List===========+"<< endl;
+                                int count = 0;
+                                for(STAFF &staff : staffList){
+                                    count++;
+                                    cout << "|\t\t"<< staff.getIdStaff() << "\t\t|" << endl;
+                                    if(staffList.size()!=static_cast<size_t>(count)){
+                                        cout << "+---------------------------------------+" << endl;
+                                    }
+                                    
+                                }
+                                cout << "+=======================================+"<< endl;
                                  cout << "Enter the staff ID whose information needs to be edited: ";
                                 string IDStaff;
                                 getline(cin, IDStaff);
@@ -127,19 +248,21 @@ int main(){
                                         int updateChoice;
                                         do {
                                             cout << "\n\n+=========UPDATE OPTION=========+" << endl;
-                                            cout << "|1. Update name\t\t\t|" << endl;
+                                            cout << "|1. Update ID\t\t\t|" << endl;
                                             cout << "+-------------------------------+" << endl;
-                                            cout << "|2. Update age\t\t\t|" << endl;
+                                            cout << "|2. Update name\t\t\t|" << endl;
                                             cout << "+-------------------------------+" << endl;
-                                            cout << "|3. Update gender\t\t|" << endl;
+                                            cout << "|3. Update day of birth\t\t|" << endl;
                                             cout << "+-------------------------------+" << endl;
-                                            cout << "|4. Update job position\t\t|" << endl;
+                                            cout << "|4. Update gender\t\t|" << endl;
                                             cout << "+-------------------------------+" << endl;
-                                            cout << "|5. Update login name\t\t|" << endl;
+                                            cout << "|5. Update job position\t\t|" << endl;
                                             cout << "+-------------------------------+" << endl;
-                                            cout << "|6. Update Password\t\t|" << endl;
+                                            cout << "|6. Update login name\t\t|" << endl;
                                             cout << "+-------------------------------+" << endl;
-                                            cout << "|7. Exit update\t\t\t|" << endl;
+                                            cout << "|7. Update Password\t\t|" << endl;
+                                            cout << "+-------------------------------+" << endl;
+                                            cout << "|8. Exit update\t\t\t|" << endl;
                                             cout << "+===============================+\n\n";
                                             while(true){
                                                 cout << "Enter selection: ";
@@ -154,105 +277,201 @@ int main(){
                                             }
                                             cin.ignore(); 
                                             switch (updateChoice) {
-                                                case 1: {
+                                                case 1:{
                                                     system("cls");
-                                                    string newName;
-                                                    while(true){
-                                                        cout << "Enter new name: ";
-                                                        getline(cin, newName);
-                                                        if (!newName.empty() && all_of(newName.begin(), newName.end(), [](char c) { return isalpha(c) || isspace(c); })) {
-                                                                break;
-                                                            } else {
-                                                                cout <<  "\033[31m" << "Please enter letters only, no special characters or numbers!" <<  "\033[0m" << endl;
+                                                    string newID;
+                                                    while (true) {
+                                                        cout << "Enter new staff ID: ";
+                                                        cin >> newID;
+                                                        if (newID.empty()) {
+                                                            cout << "\033[31mID cannot be empty!\033[0m" << endl;
+                                                            continue;
+                                                        }
+                                                        if (newID.length() < 8) {
+                                                            cout << "\033[31mID must be at least 8 characters long!\033[0m" << endl;
+                                                            continue;
+                                                        }
+                                                        bool valid = true, isAllDigits = true;
+                                                        for (char c : newID) {
+                                                            if (!isalnum(c) && c != '_' && c != '.') { 
+                                                                valid = false;
+                                                            }
+                                                            if (!isdigit(c)) { 
+                                                                isAllDigits = false;
                                                             }
                                                         }
-                                                    updateStaff.setName(newName); 
-                                                    cout << "\033[32m" << "Name updated successfully!" << "\033[0m" << endl;
+                                                        if (!valid) {
+                                                            cout << "\033[31mInvalid ID! Please enter an ID without special characters.\033[0m" << endl;
+                                                            continue;
+                                                        }
+                                                        if (isAllDigits) {
+                                                            cout << "\033[31mID cannot be all digits!\033[0m" << endl;
+                                                            continue;
+                                                        }
+                                                        bool isDuplicate = false;
+                                                        for (const STAFF& staff : staffList) {
+                                                            if (staff.getIdStaff() == newID) {
+                                                                isDuplicate = true;
+                                                                break;
+                                                            }
+                                                        }
+                                                        if (isDuplicate) {
+                                                            cout << "\033[31mDuplicate Staff ID!\033[0m" << endl;
+                                                            continue;
+                                                        }
+                                                        cout << "\033[32mID updated successfully!\033[0m" << endl;
+                                                        updateStaff.setIdStaff(newID);
+                                                        break;
+                                                    }
                                                     break;
                                                 }
                                                 case 2: {
                                                     system("cls");
-                                                    int newAge;
-                                                    while(true){
-                                                        cout << "Enter new age: ";
-                                                        cin >> newAge;
-                                                        if(cin.fail()){
-                                                            cin.clear();
-                                                            cin.ignore(1000, '\n');
-                                                            cout << "\033[31m" << "Invalid age!" <<  "\033[0m" << endl;
+                                                    string newName;
+
+                                                    while (true) {
+                                                        cout << "Enter new name: ";
+                                                        getline(cin, newName);
+                                                        if (newName.empty()) {
+                                                            cout << "\033[31m" << "Name cannot be empty!" << "\033[0m" << endl;
+                                                            continue;
                                                         }
-                                                        else if(newAge <= 0 || newAge >=100){
-                                                            cout <<  "\033[31m" << "Please re-enter new age!" <<  "\033[0m" << endl;
-                                                        }
-                                                        else{
-                                                            break;
+                                                        bool newWord = true;
+                                                        for (size_t i = 0; i < newName.size(); ++i) {
+                                                            if (isalpha(newName[i])) {
+                                                                if (newWord) {
+                                                                    newName[i] = toupper(newName[i]);  
+                                                                    newWord = false;                  
+                                                                } else {
+                                                                    newName[i] = tolower(newName[i]); 
+                                                                }
+                                                            } else {
+                                                                newWord = true; 
                                                             }
                                                         }
-                                                    // cin.ignore();
-                                                    updateStaff.setAge(newAge); 
-                                                    cout << "\033[32m" << "Successful age update." << "\033[0m" << endl; 
+                                                        bool isDuplicate = false;
+                                                        for (const STAFF& staff : staffList) {
+                                                            if (newName == staff.getName()) {
+                                                                isDuplicate = true;
+                                                                break;
+                                                            }
+                                                        }
+                                                        bool isValid = all_of(newName.begin(), newName.end(),[](char c) { return isalpha(c) || isspace(c); });
+                                                        if (!isValid) {
+                                                            cout << "\033[31m" << "Please enter letters only, no special characters or numbers!" << "\033[0m" << endl;
+                                                        } else if (isDuplicate) {
+                                                            cout << "\033[31m" << "Staff name is duplicated!" << "\033[0m" << endl;
+                                                        } else {
+                                                            updateStaff.setName(newName);
+                                                            cout << "\033[32m" << "Name updated successfully!" << "\033[0m" << endl;
+                                                            break;
+                                                        }
+                                                    }
                                                     break;
                                                 }
                                                 case 3: {
                                                     system("cls");
-                                                    string newGender;
-                                                    do {
-                                                        cout << "Enter new gender (Male/Female/Other): ";
-                                                         getline(cin, newGender);
-                                                        if (newGender == "Male" || newGender == "Female" || newGender == "male" || newGender == "female" || newGender == "Other" || newGender == "other") {
-                                                            break;
+                                                    int newDay;
+                                                    int newMonth;
+                                                    int newYear;
+                                                    do{
+                                                        cout << "Enter day of birth (day/month/year): ";
+                                                        cin >> newDay >> newMonth >> newYear;
+                                                        if(cin.fail()){
+                                                            cin.clear();
+                                                            cin.ignore(1000, '\n');
+                                                            cout <<  "\033[31m" << "Invalid Day Of Birth!" << "\033[0m" << endl;
                                                         }
-                                                        else {
-                                                            cout <<  "\033[31m" << "Invalid gender! Please re-enter." << "\033[0m" << endl;
+                                                        bool check = newYear%4;
+                                                        if(check==0){
+                                                            if(newMonth == 2){
+                                                                if(newDay > 29 || newDay <= 0){
+                                                                    cout <<  "\033[31m" << "Please re-enter Day!" <<  "\033[0m"  << endl;
+                                                                }
+                                                                else{
+                                                                    break;
+                                                                }
+                                                            }
                                                         }
-                                                    } while (true);
-                                                    updateStaff.setGender(newGender); 
-                                                    cout << "\033[32m" << "Gender update successful." << "\033[0m" << endl; 
+                                                        else if(newMonth <= 0 || newMonth > 12){
+                                                            cout <<  "\033[31m" << "Please re-enter Month!" <<  "\033[0m"  << endl;
+                                                        }
+                                                        else if(newDay > 31 || newDay <= 0){
+                                                            cout <<  "\033[31m" << "Please re-enter Day!" <<  "\033[0m"  << endl;
+                                                        }
+                                                    }while((newMonth <= 0 || newMonth > 12) || (newDay > 31 || newDay <= 0));
+                                                    cin.ignore();
+                                                    updateStaff.setDay(newDay); 
+                                                    updateStaff.setDay(newMonth);
+                                                    updateStaff.setDay(newYear);
+                                                    cout << "\033[32m" << "Successful Day Of Birth Update." << "\033[0m" << endl; 
                                                     break;
                                                 }
                                                 case 4: {
                                                     system("cls");
-                                                    string newPosition;
-                                                    do{
-                                                        cout << "Enter new job position (Parttime/Fulltime): "; getline(cin, newPosition);
-                                                        if(newPosition == "parttime" || newPosition == "Parttime" || newPosition == "Fulltime" || newPosition == "fulltime"){
+                                                    string newGender;
+                                                    do {
+                                                        cout << "Enter new gender (Male/Female/Other): ";
+                                                        getline(cin, newGender);
+                                                        transform(newGender.begin(), newGender.end(), newGender.begin(), ::tolower);
+                                                        if (newGender == "male" || newGender == "female" || newGender == "other") {
                                                             break;
+                                                        } else {
+                                                            cout << "\033[31m" << "Invalid gender! Please re-enter." << "\033[0m" << endl;
                                                         }
-                                                        else{
-                                                            cout << "\033[31m" << "Wrong work postition!" <<  "\033[0m" << endl;
-                                                        }
-                                                    }while(true);
-                                                    updateStaff.setPosition(newPosition); 
-                                                    cout << "\033[32m" << "Job position updated successfully." << "\033[0m" << endl; 
+                                                    } while (true);
+                                                    updateStaff.setGender(newGender);
+                                                    logChange("Gender updated to: " + newGender);
+                                                    cout << "\033[32m" << "Gender update successful." << "\033[0m" << endl;
                                                     break;
                                                 }
                                                 case 5: {
                                                     system("cls");
-                                                    cout << "Enter new login name: ";
-                                                    string newUserName;
-                                                    getline(cin, newUserName);
-                                                    updateStaff.setUserName(newUserName); 
-                                                    cout << "\033[32m" << "Login name updated successfully." << "\033[0m" << endl; 
+                                                    string newPosition;
+                                                    do{
+                                                        cout << "Enter new job position (Parttime/Fulltime): "; getline(cin, newPosition);
+                                                        transform(newPosition.begin(), newPosition.end(), newPosition.begin(), ::tolower);
+                                                        if(newPosition == "parttime" || newPosition == "fulltime"){
+                                                            break;
+                                                        }
+                                                        else{
+                                                            cout << "\033[31m" << "Wrong work position!" << "\033[0m" << endl;
+                                                        }
+                                                    }while(true);
+                                                    updateStaff.setPosition(newPosition);
+                                                    logChange("Job position updated to: " + newPosition);
+                                                    cout << "\033[32m" << "Job position updated successfully." << "\033[0m" << endl;
                                                     break;
                                                 }
                                                 case 6: {
                                                     system("cls");
+                                                    cout << "Enter new login name: ";
+                                                    string newUserName;
+                                                    getline(cin, newUserName);
+                                                    updateStaff.setUserName(newUserName);
+                                                    logChange("Login name updated to: " + newUserName);
+                                                    cout << "\033[32m" << "Login name updated successfully." << "\033[0m" << endl;
+                                                    break;
+                                                }
+                                                case 7: {
+                                                    system("cls");
                                                     cout << "Enter new password: ";
                                                     string newPassWord;
                                                     getline(cin, newPassWord);
-                                                    updateStaff.setPassWord(newPassWord); 
-                                                    cout << "\033[32m" << "Password updated successfully." << "\033[0m" << endl; 
+                                                    string encryptedPassword = encryptPassword(newPassWord);
+                                                    updateStaff.setPassWord(encryptedPassword);
+                                                    logChange("Password updated.");
+                                                    cout << "\033[32m" << "Password updated successfully." << "\033[0m" << endl;
                                                     break;
                                                 }
-                                                case 7:
+                                                case 8:
                                                     system("cls");
-                                                    cout << "Exit information update." << endl;
+                                                    cout << "\033[31mExit information update.\033[0m" << endl;
                                                     break;
                                                 default:
-                                                    cout <<  "\033[31m" << "Invalid selection!" << "\033[0m" << endl;
-                                                    break;
+                                                    cout << "\033[31m" << "Invalid selection!" << "\033[0m" << endl;
                                             }
-                                        } while (updateChoice != 7);
+                                        } while (updateChoice != 8);
 
                                         break;
                                     }
@@ -265,8 +484,12 @@ int main(){
                             }
                             case 4: {
                                 system("cls");
+                                if(staffList.empty()){
+                                    cout << "\033[31mStaff list is empty!\033[0m" << endl;
+                                }
                                 for (const STAFF &temp : staffList) {
                                     temp.outputInformation();
+                                    
                                 }
                                 break;
                             }
@@ -373,7 +596,8 @@ int main(){
                     cout <<  "\033[31m" << "Incorrect username or password!" <<  "\033[0m" << endl;
                     break;
                 }
-
+                    system("pause");
+                    system("cls");
                     int choiceByStaff;
                     do{
                         cout << "\n\n+======== STAFF ========+" << endl;
@@ -431,7 +655,7 @@ int main(){
                 system("cls");
                 cout << "=======================MENU======================" << endl;
                 menu.displayMenu();
-                CUSTOMER customer;
+                CUSTOMER customer;          
                 customer.orderItems(menu);
                 int transactionCode = customer.generateTransactionID();
                 customer.checkout(transactionCode,"Cash");
